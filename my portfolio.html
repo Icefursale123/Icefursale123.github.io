@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dave | Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0f;
+    --bg2: #111118;
+    --bg3: #1a1a24;
+    --accent: #7c6af7;
+    --accent2: #a78bfa;
+    --accent3: #c4b5fd;
+    --text: #f0eeff;
+    --muted: #8b849e;
+    --border: rgba(124,106,247,0.18);
+    --card: rgba(26,26,36,0.7);
+    --radius: 14px;
+    --radius-lg: 22px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── AMBIENT GLOW ── */
+  .glow-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(120px);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glow-orb-1 { width: 600px; height: 600px; background: rgba(124,106,247,0.12); top: -200px; right: -100px; }
+  .glow-orb-2 { width: 400px; height: 400px; background: rgba(167,139,250,0.08); bottom: 10%; left: -100px; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 4rem;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,15,0.7);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #fff 0%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 0.9rem;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .hero-content { max-width: 680px; }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem;
+    background: rgba(124,106,247,0.12);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.82rem;
+    color: var(--accent3);
+    letter-spacing: 0.05em;
+    margin-bottom: 2rem;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent2);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    margin-bottom: 1.5rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--text) 30%, var(--accent3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 500px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1.8rem;
+    border-radius: 100px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { background: var(--bg3); transform: translateY(-2px); }
+
+  /* ── SECTION ── */
+  section {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 4rem;
+  }
+
+  .section-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 4vw, 3rem);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 3rem;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    font-size: 1.05rem;
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-text p strong { color: var(--text); font-weight: 500; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent3);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.82rem;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .skill-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.8rem;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .skill-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+  .skill-icon {
+    width: 44px; height: 44px;
+    background: rgba(124,106,247,0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .skill-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.7rem;
+    background: rgba(124,106,247,0.1);
+    border: 1px solid rgba(124,106,247,0.2);
+    border-radius: 100px;
+    color: var(--accent3);
+    letter-spacing: 0.01em;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.2s, transform 0.2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .project-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+  .project-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    color: var(--accent2);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .project-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    letter-spacing: -0.02em;
+  }
+
+  .project-card p {
+    color: var(--muted);
+    font-size: 0.92rem;
+    line-height: 1.7;
+    flex: 1;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+  }
+
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  .project-link:hover { color: var(--accent3); }
+
+  /* ── EDUCATION ── */
+  .edu-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    backdrop-filter: blur(10px);
+    margin-bottom: 1.5rem;
+  }
+
+  .edu-card h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.02em;
+  }
+
+  .edu-card .school {
+    color: var(--accent3);
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .edu-card .location {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .roadmap {
+    display: flex;
+    gap: 0;
+    margin-top: 3rem;
+    position: relative;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 5%;
+    right: 5%;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .roadmap-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding-top: 2.5rem;
+  }
+
+  .roadmap-dot {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--bg);
+    box-shadow: 0 0 0 3px var(--accent);
+  }
+
+  .roadmap-step:not(:first-child) .roadmap-dot {
+    background: var(--bg3);
+    border-color: var(--border);
+    box-shadow: 0 0 0 3px var(--bg3);
+  }
+
+  .roadmap-step h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .roadmap-step p {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── CONTACT ── */
+  #contact {
+    background: none;
+  }
+
+  .contact-inner {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 4rem;
+    backdrop-filter: blur(20px);
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .contact-info h2 { margin-bottom: 1rem; font-size: 2.2rem; }
+
+  .contact-info p {
+    color: var(--muted);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: color 0.2s;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .contact-link:hover { color: var(--accent3); }
+
+  .contact-link span:first-child {
+    width: 32px; height: 32px;
+    background: rgba(124,106,247,0.12);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+
+  .form-group input:focus,
+  .form-group textarea:focus { border-color: var(--accent); }
+
+  .form-group textarea { min-height: 120px; }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.82rem;
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 0 auto;
+  }
+
+  .hero-photo {
+    margin-top: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+  }
+
+  .hero-photo img {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: top;
+    border: 2px solid var(--accent);
+  }
+
+  .hero-photo-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .hero-photo-label strong { color: var(--text); display: block; font-size: 1rem; }
+
+  /* ── ABOUT PHOTO ── */
+  .about-photo {
+    width: 100%;
+    max-width: 320px;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    object-position: top;
+    border: 1px solid var(--border);
+    display: block;
+    margin: 0 auto;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-content > * {
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.35s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.5s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.5rem; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .contact-inner { grid-template-columns: 1fr; padding: 2rem; gap: 2rem; }
+    .roadmap { flex-direction: column; }
+    .roadmap::before { display: none; }
+    .roadmap-dot { top: auto; left: 0; transform: none; }
+    .roadmap-step { text-align: left; padding-top: 0; padding-left: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="glow-orb glow-orb-1"></div>
+<div class="glow-orb glow-orb-2"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Dave.</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div style="position:relative;z-index:1;">
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Open to opportunities · Malaybalay, Bukidnon, PH</div>
+    <h1><span class="gradient-text">My<br>Portfolio</span></h1>
+    <p class="hero-sub">Hi, I'm <strong style="color:var(--text)">Dave</strong> — a developer and aspiring engineer who loves crafting digital experiences that are clean, functional, and meaningful.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary">View My Work →</a>
+      <a href="#contact" class="btn btn-outline">Get In Touch</a>
+    </div>
+    <div class="hero-photo">
+      <img src="me.jpg" alt="Dave">
+      <div class="hero-photo-label">
+        <strong>Dave</strong>
+        Malaybalay, Bukidnon · PH
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">// About Me</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <h2>A passionate builder &amp; learner</h2>
+      <p>I'm a developer based in <strong>Malaybalay, Bukidnon, Philippines</strong> with a love for building practical, well-crafted software. I thrive at the intersection of design and engineering.</p>
+      <p>Whether it's a <strong>web app</strong>, a <strong>networking setup</strong>, or exploring what <strong>AI tools</strong> can do — I approach every project with curiosity and attention to detail.</p>
+      <p>When I'm not coding, you'll find me learning new technologies and thinking about how software can solve real-world problems.</p>
+      <div style="margin-top:2rem;">
+        <a href="mailto:davea6756@gmail.com" class="btn btn-outline" style="font-size:0.85rem;">✉ davea6756@gmail.com</a>
+      </div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:1.5rem; align-items:center;">
+      <img src="me.jpg" alt="Dave" class="about-photo">
+      <div class="about-stats">
+        <div class="stat-card">
+          <div class="stat-num">Web</div>
+          <div class="stat-label">Developer</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">AI</div>
+          <div class="stat-label">Enthusiast</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">PH</div>
+          <div class="stat-label">Based Builder</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Always Learning</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">// Skills &amp; Technologies</div>
+  <h2>Tools I work with</h2>
+  <div class="skills-grid">
+    <div class="skill-card">
+      <div class="skill-icon">🌐</div>
+      <h3>Web Development</h3>
+      <div class="skill-tags">
+        <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Firebase</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🤖</div>
+      <h3>Artificial Intelligence</h3>
+      <div class="skill-tags">
+        <span class="tag">Prompt Engineering</span><span class="tag">Claude AI</span><span class="tag">Gemini</span><span class="tag">AI-Assisted Dev</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🔌</div>
+      <h3>Networking</h3>
+      <div class="skill-tags">
+        <span class="tag">Cisco Packet Tracer</span><span class="tag">VLANs</span><span class="tag">ACLs</span><span class="tag">Wireshark</span>
+      </div>
+    </div>
+    <div class="skill-card">
+      <div class="skill-icon">🛠</div>
+      <h3>Developer Tools</h3>
+      <div class="skill-tags">
+        <span class="tag">Git</span><span class="tag">GitHub</span><span class="tag">VS Code</span><span class="tag">Figma</span><span class="tag">draw.io</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">// Featured Projects</div>
+  <h2>Things I've built</h2>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-num">PROJECT 01</div>
+      <h3>Digital Reservation System</h3>
+      <p>A web-based reservation system built for campus use. Handles bookings, scheduling, and real-time availability — developed as part of a collaborative capstone project.</p>
+      <div class="skill-tags" style="margin-bottom:1.5rem;">
+        <span class="tag">Firebase</span><span class="tag">Web App</span><span class="tag">Capstone</span>
+      </div>
+      <div class="project-footer">
+        <a href="#" class="project-link">View Project →</a>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">PROJECT 02</div>
+      <h3>Academic Planner</h3>
+      <p>A productivity web app that helps students organize tasks, schedules, and academic goals all in one place. Clean UI with practical daily-use workflows.</p>
+      <div class="skill-tags" style="margin-bottom:1.5rem;">
+        <span class="tag">HTML/CSS/JS</span><span class="tag">Productivity</span><span class="tag">Student Tool</span>
+      </div>
+      <div class="project-footer">
+        <a href="#" class="project-link">View Project →</a>
+      </div>
+    </div>
+    <div class="project-card" style="border-style:dashed; opacity:0.6;">
+      <div class="project-num">COMING SOON</div>
+      <h3>Next Project</h3>
+      <p>Something new is in the works. Stay tuned — or reach out if you'd like to collaborate on something meaningful.</p>
+      <div class="project-footer">
+        <a href="#contact" class="project-link">Let's Build Together →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-label">// Education</div>
+  <h2>My academic journey</h2>
+
+  <div class="edu-card">
+    <h3>Bachelor of Science in Information Technology</h3>
+    <div class="school">Cagayan de Oro · Philippines</div>
+    <div class="location">BSIT Student · Aspiring Engineer</div>
+  </div>
+
+  <h3 style="font-family:'Syne',sans-serif; font-size:1.1rem; margin-bottom:1.5rem; margin-top:3rem; color:var(--muted); font-weight:600; letter-spacing:0.02em;">CAREER ROADMAP</h3>
+  <div class="roadmap">
+    <div class="roadmap-step">
+      <div class="roadmap-dot"></div>
+      <h4>Phase 1</h4>
+      <p>CS &amp; Web Fundamentals</p>
+    </div>
+    <div class="roadmap-step">
+      <div class="roadmap-dot"></div>
+      <h4>Phase 2</h4>
+      <p>Machine Learning &amp; AI Tools</p>
+    </div>
+    <div class="roadmap-step">
+      <div class="roadmap-dot"></div>
+      <h4>Phase 3</h4>
+      <p>AI Engineering &amp; Deployment</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="contact-info">
+      <div class="section-label">// Contact</div>
+      <h2>Let's build something together</h2>
+      <p>Got a project in mind, an opportunity to share, or just want to say hi? My inbox is open.</p>
+
+      <div class="contact-links">
+        <a href="mailto:davea6756@gmail.com" class="contact-link">
+          <span>✉</span>
+          <span>davea6756@gmail.com</span>
+        </a>
+        <a href="https://www.linkedin.com/jobs/" target="_blank" class="contact-link">
+          <span>in</span>
+          <span>LinkedIn Profile</span>
+        </a>
+        <a href="https://github.com/" target="_blank" class="contact-link">
+          <span>⌥</span>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-form">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="your@email.com">
+      </div>
+      <div class="form-group">
+        <label>Message</label>
+        <textarea placeholder="What's on your mind?"></textarea>
+      </div>
+      <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="alert('Message sent! (Connect this to a backend to make it live)')">Send Message →</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Designed &amp; built with care · Dave · 2025</p>
+</footer>
+
+</body>
+</html>
